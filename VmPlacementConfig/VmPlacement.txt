@@ -1,0 +1,61 @@
+# PEERSIM VmPlacement
+random.seed 1234567890
+simulation.cycles 2880
+control.shf Shuffle
+
+DEGREE 20
+PEERS 1600
+network.size PEERS
+protocol.lnk IdleProtocol
+
+#protocol.lnk example.newscast.SimpleNewscast
+#protocol.lnk.cache DEGREE
+
+
+
+#protocol.lnk CyclonProtocol
+#protocol.lnk.cache DEGREE
+#protocol.lnk.l 5
+
+
+
+protocol.vmplace vmconsolidation.VmPlacement
+protocol.vmplace.linkable lnk
+
+
+#protocol.vivp.coord_impl Dim2DHeightVivaldiCoordinate
+#protocol.vivp.correction_factor 0.5
+#protocol.vivp.uncertainty_factor 0.5
+
+init.rnd WireKOut
+init.rnd.protocol lnk
+init.rnd.k DEGREE
+
+
+init.hi vmconsolidation.HostsInitialization
+init.hi.UPTHR 0.9
+init.hi.LOWTHR 0.5
+#init.hi.MAXVM 4
+#init.hi.VMMIPS 400
+
+
+init.hi.protocol vmplace
+
+
+
+
+
+#control.adc vmconsolidation.AdmisionControl
+#control.adc.protocol vmplace 
+
+control.brw vmconsolidation.RandomWorkload
+control.brw.protocol vmplace
+
+control.ccm vmconsolidation.CalculateMetrics
+control.ccm.protocol vmplace
+
+#control.dcttl vmconsolidation.CheckTTLExpiration
+#control.dcttl.protocol vmplace
+
+control.esvo vmconsolidation.ESVObserver
+control.esvo.protocol vmplace
